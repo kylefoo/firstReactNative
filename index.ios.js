@@ -18,59 +18,29 @@ import React, {
 const FirstApp = React.createClass({
   getInitialState() {
     return {
-      allowFire: false,
-      fired: false
+      // You may want to put stuff here.
     }
-  },
-
-  fire() {
-    if (!this.state.allowFire) return
-
-    this.setState({ fired: true, allowFire: false })
-  },
-
-  renderFireControl() {
-    if (this.state.fired) return null
-
-    const buttonStyle = this.state.allowFire ? [styles.fireButton, styles.fireButtonActive] : [styles.fireButton]
-
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Launch Control
-        </Text>
-
-        <Switch
-          onValueChange={(value) => this.setState({ allowFire: value })}
-          value={this.state.allowFire} />
-
-        <View style={styles.fireControl}>
-          <TouchableOpacity style={buttonStyle} onPress={this.fire}>
-            <Text style={styles.whiteText}>Fire!</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    )
-  },
-
-  renderMissile() {
-    if (!this.state.fired) return null
-
-    var {height, width} = Dimensions.get('window')
-
-    return (
-      <Image
-        style={{ height, width }}
-        source={require('./resources/images/spacex-launch.jpg')}
-      />
-    )
   },
 
   render() {
     return (
       <View style={styles.container}>
-        { this.renderFireControl() }
-        { this.renderMissile() }
+        <Text style={styles.welcome}>
+          Up next...
+        </Text>
+        <Text style={styles.instructions}>
+          Build an app to launch Spacex rockets.
+        </Text>
+        <Text style={styles.instructions}>
+          It should include some type of launch safeguard{'\n'}
+          to enable and disable a main Launch button.
+        </Text>
+        <Text style={styles.instructions}>
+          For the purposes of this example, don't actually{'\n'}
+          launch a rocket. Instead you can just show a picture{'\n'}
+          of a rocket launch instead. You can find one at{'\n'}
+          ./resources/images/spacex-launch.jpg
+        </Text>
       </View>
     );
   }
@@ -91,28 +61,6 @@ const styles = StyleSheet.create({
   instructions: {
     marginTop: 10,
     textAlign: 'center',
-  },
-  targetImage: {
-    width: 150,
-    height: 300,
-    marginTop: 25,
-  },
-  whiteText: {
-    color: '#eee',
-  },
-  fireControl: {
-    margin: 25,
-  },
-  fireButton: {
-    padding: 25,
-    backgroundColor: 'grey',
-    borderWidth: 1,
-    borderColor: 'grey',
-    borderRadius: 15,
-  },
-  fireButtonActive: {
-    backgroundColor: '#c02f1d',
-    borderColor: '#8E1A0B',
   }
 });
 
