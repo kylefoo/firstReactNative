@@ -8,6 +8,7 @@ import React, {
   Component,
   Dimensions,
   Image,
+  MapView,
   StyleSheet,
   Switch,
   Text,
@@ -15,52 +16,100 @@ import React, {
   View
 } from 'react-native';
 
+function distance(lat1, lon1, lat2, lon2) {
+	var radlat1 = Math.PI * lat1/180
+	var radlat2 = Math.PI * lat2/180
+	var theta = lon1-lon2
+	var radtheta = Math.PI * theta/180
+	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+	dist = Math.acos(dist)
+	dist = dist * 180/Math.PI
+	dist = dist * 60 * 1.1515
+	return dist.toFixed(2)
+}
+
 const FirstApp = React.createClass({
   getInitialState() {
     return {
-      // You may want to put stuff here.
+      position: {
+        coords: {
+          latitude: 0,
+          longitude: 0
+        }
+      },
+      region: {
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1
+      }
     }
   },
 
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const longitude = position.coords.longitude
+      const latitude = position.coords.latitude
+      this.setState({ position, region: { longitude, latitude } })
+    }, (error) => {
+      alert(error.message)
+    }, {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 1000
+    })
+
+    this.watchID = navigator.geolocation.watchPosition((position) => {
+      this.setState({ position })
+    })
+  },
+
+  componentWillUnmount: function() {
+    navigator.geolocation.clearWatch(this.watchID);
+  },
+
+  distanceFromHome() {
+    const homePosition = {
+      latitude: 40.0274,
+      longitude: -105.2519
+    } // Boulder, CO
+
+    const currentPosition = this.state.position.coords
+
+    return distance(homePosition.latitude, homePosition.longitude, currentPosition.latitude, currentPosition.longitude)
+  },
+
   render() {
+    const { height, width } = Dimensions.get('window')
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Up next...
-        </Text>
-        <Text style={styles.instructions}>
-          Build an app to launch Spacex rockets.
-        </Text>
-        <Text style={styles.instructions}>
-          It should include some type of launch safeguard{'\n'}
-          to enable and disable a main Launch button.
-        </Text>
-        <Text style={styles.instructions}>
-          For the purposes of this example, don't actually{'\n'}
-          launch a rocket. Instead you can just show a picture{'\n'}
-          of a rocket launch instead. You can find one at{'\n'}
-          ./resources/images/spacex-launch.jpg
-        </Text>
+      <View>
+        <MapView
+          style={{ height, width }}
+          region={this.state.region}
+          showsUserLocation={true}
+          />
+        <View style={[styles.overlay, { width }]}>
+          <Text style={styles.overlayText}>
+            {this.distanceFromHome()} miles from home.
+          </Text>
+        </View>
       </View>
     );
   }
 })
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#eee',
+  overlay: {
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    position: 'absolute',
+    bottom: 25,
+    padding: 10,
   },
-  welcome: {
+  overlayText: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 20,
-  },
-  instructions: {
-    marginTop: 10,
-    textAlign: 'center',
+    color: '#eee',
+    textAlign: 'center'
   }
 });
 
