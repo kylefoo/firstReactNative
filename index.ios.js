@@ -17,20 +17,19 @@ class FirstApp extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Try this:
+          Next challenge!
+        </Text>
+        <Text style={styles.instructions}>
+          Try to build a replica of the screen{'\n'}
+          shown in the challenge directions.
+        </Text>
+        <Text style={styles.instructions}>
+          (The one below.)
         </Text>
         <Image
-          style={styles.image}
-          source={{uri: 'https://s3.amazonaws.com/vigesharing-is-vigecaring/lkurtz/rn-workshop-mind-blown.gif'}}
+          style={styles.targetImage}
+          source={require('./resources/images/challenge-3-target.png')}
         />
-        <View style={styles.textContainer}>
-          <Text style={styles.nestedText}>
-            I'm on the <Text style={styles.blueText}>left</Text>.
-          </Text>
-          <Text style={styles.nestedText}>
-            I'm on the <Text style={styles.orangeText}>right</Text>.
-          </Text>
-        </View>
       </View>
     );
   }
@@ -41,34 +40,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#333',
+    backgroundColor: '#eee',
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-    color: '#ddd',
   },
-  textContainer: {
-    flexDirection: 'row',
+  instructions: {
+    marginTop: 10,
+    textAlign: 'center',
   },
-  nestedText: {
-    color: '#ddd',
-    padding: 25,
-  },
-  image: {
-    height: 200,
-    margin: 25,
-    width: 200,
-    borderWidth: 5,
-    borderColor: '#222',
-    borderRadius: 100,
-  },
-  blueText: {
-    color: '#2095b7',
-  },
-  orangeText: {
-    color: '#ef6c2e',
+  targetImage: {
+    width: 150,
+    height: 300,
+    marginTop: 25,
   }
 });
 
