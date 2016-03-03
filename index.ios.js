@@ -14,24 +14,23 @@ import React, {
 
 class FirstApp extends Component {
   render() {
-    imNotDefined
-
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Nice work!
+          Try this:
         </Text>
         <Image
           style={styles.image}
-          source={{uri: 'https://s3.amazonaws.com/vigesharing-is-vigecaring/lkurtz/rn-workshop-thumbs-up.gif'}}
+          source={{uri: 'https://s3.amazonaws.com/vigesharing-is-vigecaring/lkurtz/rn-workshop-mind-blown.gif'}}
         />
-        <Text style={styles.instructions}>
-          Now take a look around a bit with the dev tools.
-        </Text>
-        <Text style={styles.instructions}>
-          Remember: press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.nestedText}>
+            I'm on the <Text style={styles.blueText}>left</Text>.
+          </Text>
+          <Text style={styles.nestedText}>
+            I'm on the <Text style={styles.orangeText}>right</Text>.
+          </Text>
+        </View>
       </View>
     );
   }
@@ -42,24 +41,35 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#333',
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-    imNotAProperty: 42
+    color: '#ddd',
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 10,
+  textContainer: {
+    flexDirection: 'row',
+  },
+  nestedText: {
+    color: '#ddd',
+    padding: 25,
   },
   image: {
-    height: 100,
+    height: 200,
     margin: 25,
     width: 200,
+    borderWidth: 5,
+    borderColor: '#222',
+    borderRadius: 100,
   },
+  blueText: {
+    color: '#2095b7',
+  },
+  orangeText: {
+    color: '#ef6c2e',
+  }
 });
 
 AppRegistry.registerComponent('FirstApp', () => FirstApp);
