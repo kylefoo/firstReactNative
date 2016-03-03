@@ -36,8 +36,32 @@ const FirstApp = React.createClass({
           latitude: 0,
           longitude: 0
         }
+      },
+      region: {
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1
       }
     }
+  },
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const longitude = position.coords.longitude
+      const latitude = position.coords.latitude
+      this.setState({ position, region: { longitude, latitude } })
+    }, (error) => {
+      alert(error.message)
+    }, {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 1000
+    })
+
+    this.watchID = navigator.geolocation.watchPosition((position) => {
+      this.setState({ position })
+    })
   },
 
   componentWillUnmount: function() {
@@ -45,12 +69,10 @@ const FirstApp = React.createClass({
   },
 
   distanceFromHome() {
-    // These are the coords for Boulder, CO.
-    // Replace with your own hometown coords!
     const homePosition = {
       latitude: 40.0274,
       longitude: -105.2519
-    }
+    } // Boulder, CO
 
     const currentPosition = this.state.position.coords
 
@@ -58,43 +80,37 @@ const FirstApp = React.createClass({
   },
 
   render() {
+    const { height, width } = Dimensions.get('window')
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Geolocation is cool.
-        </Text>
-        <Text style={styles.instructions}>
-          Make an app that shows this device's location{'\n'}
-          on a map, and displays in realtime its{'\n'}
-          distance from your home city.
-        </Text>
-        <Text style={styles.instructions}>
-          Feel free to use the provided `distanceFromHome`{'\n'}
-          method, but note that it expects `this.state.position`{'\n'}
-          to be a position object from the Geolocation API.
-        </Text>
+      <View>
+        <MapView
+          style={{ height, width }}
+          region={this.state.region}
+          showsUserLocation={true}
+          />
+        <View style={[styles.overlay, { width }]}>
+          <Text style={styles.overlayText}>
+            {this.distanceFromHome()} miles from home.
+          </Text>
+        </View>
       </View>
     );
   }
 })
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+  overlay: {
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    position: 'absolute',
+    bottom: 25,
+    padding: 10,
   },
-  welcome: {
+  overlayText: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 10,
-  },
+    color: '#eee',
+    textAlign: 'center'
+  }
 });
 
 AppRegistry.registerComponent('FirstApp', () => FirstApp);
